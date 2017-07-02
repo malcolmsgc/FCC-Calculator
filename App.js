@@ -7,15 +7,14 @@ class App extends Component {
 
 constructor() {
   super();
-    this.state = {
+  this.state = {
       buttons: {
-                  name1: value1,
-                  name2: value2,
-                  name3: value3,
-                  name4: value4,
-
-      } 
-    }
+        AC: "AC",
+        C: "C",
+        "( )": "function to run",
+        "+": "+"
+      }
+    };
 }
 
   render() {
@@ -26,7 +25,7 @@ constructor() {
           <h2>Malcolm's calculator app</h2>
         </div>
         <div className="flex-wrapper">
-            <Casing />
+            <Casing buttons={this.state.buttons}/>
         </div>
       </div>
     );

@@ -5,7 +5,7 @@ import Button from './Button';
 
 const Casing = (props) => {
 
-console.log(Object.keys(buttons));
+console.table(props);
 
     return (
         <div className="case">
