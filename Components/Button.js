@@ -5,9 +5,9 @@ class Button extends React.Component {
     
     render() {
          return (
-                <div className="button">
+                <button className="button" data-value={this.props.buttonValue} onClick={(e) => {alert(this.props.buttonValue)}}>
                     {this.props.buttonText}
-                </div>
+                </button>
             )
     }
 }

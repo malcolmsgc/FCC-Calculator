@@ -1,19 +1,18 @@
 import React from 'react';
 import Screen from './Screen';
-import Button from './Button';
+import ButtonRow from './ButtonRow';
 
 
 const Casing = (props) => {
 
-console.table(props);
-
+    const rows = Object.keys(props.buttons);
     return (
         <div className="case">
             <Screen screenOutput="Some numbers 232445"/>
-            <Button buttonText="Btn"/>
-            <Button buttonText="Btn"/>
-            <Button buttonText="Btn"/>
-            <Button buttonText="Btn"/>
+            <section className="keypad">
+                {rows.map( (row) => <ButtonRow key={row} buttons={props.buttons[row]} /> )}
+            </section>
+            
         </div>
     )
 }
