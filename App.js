@@ -37,14 +37,19 @@ constructor() {
                   "=": "="
                 }
               }
-  this.state = {};
+  this.state = {
+    screenDigit: "3",
+    currentOperation: "5 X 3"
+  };
 }
 
   render() {
     return (
       <div className="App">
         <div className="flex-wrapper">
-            <Casing buttons={this.buttons}/>
+            <Casing buttons={this.buttons} 
+            screenDigit={this.state.screenDigit} 
+            currentOperation={this.state.currentOperation} />
         </div>
       </div>
     );

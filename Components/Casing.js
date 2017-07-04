@@ -8,7 +8,7 @@ const Casing = (props) => {
     const rows = Object.keys(props.buttons);
     return (
         <div className="case">
-            <Screen screenOutput="Some numbers 232445"/>
+            <Screen screenDigit={props.screenDigit} currentOperation={props.currentOperation} />
             <section className="keypad">
                 {rows.map( (row) => <ButtonRow key={row} row={row} buttons={props.buttons[row]} /> )}
             </section>
