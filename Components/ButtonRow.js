@@ -5,7 +5,7 @@ class ButtonRow extends React.Component {
     
     render() {
         return (
-             <section className="button-row {this.key}">
+             <section className={`button-row ${this.props.row}`}>
                 { Object.keys(this.props.buttons)
                         .map((btn) => <Button key={btn} buttonText={btn} buttonValue={this.props.buttons[btn]} />)
                 }

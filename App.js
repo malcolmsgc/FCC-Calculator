@@ -6,8 +6,7 @@ class App extends Component {
 
 constructor() {
   super();
-  this.state = {
-      buttons: {
+  this.buttons = {
                 row1: {
                   AC: "AC",
                   C: "C",
@@ -38,14 +37,14 @@ constructor() {
                   "=": "="
                 }
               }
-    };
+  this.state = {};
 }
 
   render() {
     return (
       <div className="App">
         <div className="flex-wrapper">
-            <Casing buttons={this.state.buttons}/>
+            <Casing buttons={this.buttons}/>
         </div>
       </div>
     );
