@@ -6,6 +6,9 @@ class App extends Component {
 
 constructor() {
   super();
+  // methods
+  this.addToOperation = this.addToOperation.bind(this);
+  //state and content
   this.buttons = {
                 row1: {
                   AC: "AC",
@@ -38,9 +41,19 @@ constructor() {
                 }
               }
   this.state = {
-    screenDigit: "3",
-    currentOperation: "5 X 3"
+    screenDigit: "0",
+    currentOperation: "0"
   };
+}
+
+addToOperation(btnValue) {
+  //take a copy of state
+  //let operation = this.state.currentOperation;
+  //test run of using setState with callback
+  this.setState((prevState) => {
+    return { currentOperation: prevState.currentOperation === "0" ? prevState.currentOperation = btnValue :
+                                                                  prevState.currentOperation += btnValue }
+    });
 }
 
   render() {
@@ -49,7 +62,8 @@ constructor() {
         <div className="flex-wrapper">
             <Casing buttons={this.buttons} 
             screenDigit={this.state.screenDigit} 
-            currentOperation={this.state.currentOperation} />
+            currentOperation={this.state.currentOperation} 
+            addToOperation={this.addToOperation} />
         </div>
       </div>
     );

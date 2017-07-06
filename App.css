@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Coda|Nova+Mono');
+
 .App {
   text-align: center;
 }
@@ -42,6 +44,7 @@
 }
 
 .screen {
+  font-family: 'Nova Mono', monospace;
   font-size: 2.5rem;
   text-align: right;
   background-color: lightblue;
@@ -67,6 +70,7 @@
   margin: 5px;
   flex: 1 1 25%;
   height: 45px;
+  /*font-family: 'Coda', Arial, sans-serif;*/
   font-size: 1rem; 
   border-radius: 15%;
   background-color: honeydew;
