@@ -10,7 +10,7 @@ constructor() {
   this.addToOperation = this.addToOperation.bind(this);
   this.handleKeyPress = this.handleKeyPress.bind(this);
   this.deleteFromOperation = this.deleteFromOperation.bind(this);
-  this.deleteOperation = this.deleteOperation.bind(this);
+  this.allClear = this.allClear.bind(this);
   this.brackets = this.brackets.bind(this);
   //state and content
   this.buttons = {
@@ -65,7 +65,12 @@ deleteFromOperation() {
     });
 }
 
-deleteOperation() {return}
+allClear() {
+  this.setState((prevState) => {
+    return { currentOperation: "0",
+             screenDigit: "0" }
+    });
+}
 
 
 addToOperation(btnValue) {
@@ -93,7 +98,7 @@ handleKeyPress(e) {
                         this.deleteFromOperation();
                         break;
     case "Esc":
-    case "Escape":      console.log('Esc');
+    case "Escape":      this.allClear();
                         break;
     case "Enter":
     case "=":           console.log('=');
@@ -101,8 +106,8 @@ handleKeyPress(e) {
     case "*":           if (!this.state.screenDigit.match(/x/i)) this.addToOperation("x");
                         //key is * so needs translation
                         break;
-    case "+":           //if (this.state.screenDigit === e.key) break; 
-    case "-":           //if (this.state.screenDigit === e.key) break; 
+    case "+":            
+    case "-":           
     case "/":           if (this.state.screenDigit.match(operator)) break;
     default:            console.log(e.key)
                         this.addToOperation(e.key);
