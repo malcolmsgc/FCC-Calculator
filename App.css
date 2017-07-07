@@ -49,10 +49,14 @@
   text-align: right;
   background-color: lightblue;
   padding: 10px;
+  /*overflow: hidden;*/
 }
 
 .screen aside {
   font-size: 0.5em;
+  overflow: hidden;
+  max-width: 380px;
+  direction: rtl;
 }
 
 .keypad {

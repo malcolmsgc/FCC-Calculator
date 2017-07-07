@@ -17,25 +17,25 @@ constructor() {
                   "+": "+"
                 },
                 row2: {
-                  "7": 7,
-                  "8": 8,
-                  "9": 9,
+                  "7": "7",
+                  "8": "8",
+                  "9": "9",
                   "-": "-"
                 },
                 row3: {
-                  "4": 4,
-                  "5": 5,
-                  "6": 6,
+                  "4": "4",
+                  "5": "5",
+                  "6": "6",
                   "x": "x"
                 },
                 row4: {
-                  "1": 1,
-                  "2": 2,
-                  "3": 3,
+                  "1": "1",
+                  "2": "2",
+                  "3": "3",
                   "÷": "/"
                 },
                 row5: {
-                  "0": 0,
+                  "0": "0",
                   ".": ".",
                   "=": "="
                 }
@@ -52,7 +52,8 @@ addToOperation(btnValue) {
   //test run of using setState with callback
   this.setState((prevState) => {
     return { currentOperation: prevState.currentOperation === "0" ? prevState.currentOperation = btnValue :
-                                                                  prevState.currentOperation += btnValue }
+                                                                  prevState.currentOperation += btnValue,
+             screenDigit: btnValue }
     });
 }
 
