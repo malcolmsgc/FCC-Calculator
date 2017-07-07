@@ -78,12 +78,16 @@ addToOperation(btnValue) {
     });
 }
 
+//helper function to replace an operator with a new operator
+replaceOperator() {}
+
+//function for the "( )" button to figure out if opening or closing bracket needed
 brackets() {}
 
 handleKeyPress(e) {
-  const valid = e.key.match(/[\d+=\-*\.)(]|Backspace|Esc(ape)*|Enter/i) || e.keyCode === 13;
+  const valid = e.key.match(/[\d+=\-*/\.)(]|Backspace|Esc(ape)*|Enter/i) || e.keyCode === 13;
   if (!valid) return;
-  
+  const operator = new RegExp(/[+=\-*/\.)(]/i);
   switch (e.key) {
     case "Backspace":   console.log('delete');
                         this.deleteFromOperation();
@@ -94,7 +98,14 @@ handleKeyPress(e) {
     case "Enter":
     case "=":           console.log('=');
                         break;
-    default:            this.addToOperation(e.key);
+    case "*":           if (!this.state.screenDigit.match(/x/i)) this.addToOperation("x");
+                        //key is * so needs translation
+                        break;
+    case "+":           //if (this.state.screenDigit === e.key) break; 
+    case "-":           //if (this.state.screenDigit === e.key) break; 
+    case "/":           if (this.state.screenDigit.match(operator)) break;
+    default:            console.log(e.key)
+                        this.addToOperation(e.key);
   }
 }
 
