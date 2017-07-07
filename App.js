@@ -9,6 +9,9 @@ constructor() {
   // methods
   this.addToOperation = this.addToOperation.bind(this);
   this.handleKeyPress = this.handleKeyPress.bind(this);
+  this.deleteFromOperation = this.deleteFromOperation.bind(this);
+  this.deleteOperation = this.deleteOperation.bind(this);
+  this.brackets = this.brackets.bind(this);
   //state and content
   this.buttons = {
                 row1: {
@@ -55,12 +58,35 @@ componentDidMount() {
 
 // COMPONENT METHODS
 
+deleteFromOperation() {
+    this.setState((prevState) => {
+    return { currentOperation: prevState.currentOperation.slice(0, prevState.currentOperation.length-1) || "0",
+             screenDigit: prevState.currentOperation.charAt(prevState.currentOperation.length-2) || "0" }
+    });
+}
+
+deleteOperation() {return}
+
+
+addToOperation(btnValue) {
+  //setState with callback
+  this.setState((prevState) => {
+    return { currentOperation: prevState.currentOperation === "0" ? 
+                                  prevState.currentOperation = btnValue :
+                                  prevState.currentOperation += btnValue,
+             screenDigit: btnValue }
+    });
+}
+
+brackets() {}
+
 handleKeyPress(e) {
   const valid = e.key.match(/[\d+=\-*\.)(]|Backspace|Esc(ape)*|Enter/i) || e.keyCode === 13;
   if (!valid) return;
   
   switch (e.key) {
     case "Backspace":   console.log('delete');
+                        this.deleteFromOperation();
                         break;
     case "Esc":
     case "Escape":      console.log('Esc');
@@ -70,19 +96,6 @@ handleKeyPress(e) {
                         break;
     default:            this.addToOperation(e.key);
   }
-}
-
-
-addToOperation(btnValue) {
-  //take a copy of state
-  //let operation = this.state.currentOperation;
-  //test run of using setState with callback
-  this.setState((prevState) => {
-    return { currentOperation: prevState.currentOperation === "0" ? 
-                                  prevState.currentOperation = btnValue :
-                                  prevState.currentOperation += btnValue,
-             screenDigit: btnValue }
-    });
 }
 
   render() {
