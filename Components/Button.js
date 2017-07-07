@@ -5,7 +5,7 @@ class Button extends React.Component {
     
     render() {
          return (
-                <button className="button" data-value={this.props.buttonValue} onClick={(e) => this.props.addToOperation(this.props.buttonValue) } >
+                <button className="button" data-value={this.props.buttonValue} onClick={() => this.props.addToOperation(this.props.buttonValue) } >
                     {this.props.buttonText}
                 </button>
             )

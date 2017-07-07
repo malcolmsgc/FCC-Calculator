@@ -8,6 +8,7 @@ constructor() {
   super();
   // methods
   this.addToOperation = this.addToOperation.bind(this);
+  this.handleKeyPress = this.handleKeyPress.bind(this);
   //state and content
   this.buttons = {
                 row1: {
@@ -46,13 +47,29 @@ constructor() {
   };
 }
 
+// LIFECYCLE METHODS
+
+componentDidMount() {
+  document.addEventListener('keyup', this.handleKeyPress);
+}
+
+// COMPONENT METHODS
+
+handleKeyPress(e) {
+  const valid = e.key.match(/[\d+=\-*\.)(]|Backspace|Esc(ape)*|Enter/i) || e.keyCode === 13;
+  if (!valid) return;
+  console.log(e)
+}
+
+
 addToOperation(btnValue) {
   //take a copy of state
   //let operation = this.state.currentOperation;
   //test run of using setState with callback
   this.setState((prevState) => {
-    return { currentOperation: prevState.currentOperation === "0" ? prevState.currentOperation = btnValue :
-                                                                  prevState.currentOperation += btnValue,
+    return { currentOperation: prevState.currentOperation === "0" ? 
+                                  prevState.currentOperation = btnValue :
+                                  prevState.currentOperation += btnValue,
              screenDigit: btnValue }
     });
 }

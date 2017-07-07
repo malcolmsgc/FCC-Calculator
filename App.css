@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Coda|Nova+Mono');
+@import url('https://fonts.googleapis.com/css?family=Josefin+Sans|Nova+Mono');
 
 .App {
   text-align: center;
@@ -38,7 +38,7 @@
 }
 
 .screenWrapper {
-  flex: 0 0 100%;
+  flex: 0 1 100%;
   margin-top: 10px;
   background-color: pink;
 }
@@ -49,7 +49,6 @@
   text-align: right;
   background-color: lightblue;
   padding: 10px;
-  /*overflow: hidden;*/
 }
 
 .screen aside {
@@ -74,8 +73,10 @@
   margin: 5px;
   flex: 1 1 25%;
   height: 45px;
-  /*font-family: 'Coda', Arial, sans-serif;*/
-  font-size: 1rem; 
+  font-family: 'Josefin Sans', Arial, sans-serif;
+  letter-spacing: 0.1em;
+  font-size: 1.1rem; 
+  line-height: 2em;
   border-radius: 15%;
   background-color: honeydew;
 }
