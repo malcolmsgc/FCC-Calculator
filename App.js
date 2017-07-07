@@ -58,7 +58,18 @@ componentDidMount() {
 handleKeyPress(e) {
   const valid = e.key.match(/[\d+=\-*\.)(]|Backspace|Esc(ape)*|Enter/i) || e.keyCode === 13;
   if (!valid) return;
-  console.log(e)
+  
+  switch (e.key) {
+    case "Backspace":   console.log('delete');
+                        break;
+    case "Esc":
+    case "Escape":      console.log('Esc');
+                        break;
+    case "Enter":
+    case "=":           console.log('=');
+                        break;
+    default:            this.addToOperation(e.key);
+  }
 }
 
 
