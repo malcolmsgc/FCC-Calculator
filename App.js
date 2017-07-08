@@ -9,6 +9,7 @@ constructor() {
   super();
   // methods
   this.addToOperation = this.addToOperation.bind(this);
+  this.handleBtnClick = this.handleBtnClick.bind(this);
   this.handleKeyPress = this.handleKeyPress.bind(this);
   this.deleteFromOperation = this.deleteFromOperation.bind(this);
   this.allClear = this.allClear.bind(this);
@@ -25,6 +26,7 @@ constructor() {
 
 componentDidMount() {
   document.addEventListener('keyup', this.handleKeyPress);
+  //document.addEventListener('click', this.handleBtnClick);
 }
 
 // COMPONENT METHODS
@@ -88,15 +90,15 @@ handleKeyPress(e) {
   }
 }
 
-handleBtnClick(btnValue) {
-  const special = btnValue.match(/[+=\-x/)(]|( )|AC|C/i);
+handleBtnClick(buttonText) {
+  const special = buttonText.match(/[+=\-x÷)(]|( )|AC|C/i);
   if (!special) {
-    this.addToOperation(btnValue);
+    this.addToOperation(buttonText);
   }
   else {
     const operator = new RegExp(/[+=\-x/)(]/i);
-    switch (btnValue) {
-      case "C":   console.log('delete');
+    switch (buttonText) {
+      case "C":           console.log('delete');
                           this.deleteFromOperation();
                           break;
       case "AC":          this.allClear();
@@ -105,27 +107,29 @@ handleBtnClick(btnValue) {
                           break;
       case "( )":         console.log('() TO DO function');
                           break;
-      case "*":           if (!this.state.screenDigit.match(/x/i)) this.addToOperation("x");
-                          //key is * so needs translation
+      case "÷":           if (!this.state.screenDigit.match(/\//i)) this.addToOperation("/");
                           break;
+                          
       case "+":            
       case "-":           
-      case "/":           if (this.state.screenDigit.match(operator)) break;
-      default:            console.log(btnValue)
-                          this.addToOperation(btnValue);
+      case "x":           if (this.state.screenDigit.match(operator)) break;
+      default:            console.log(buttonText)
+                          this.addToOperation(buttonText);
     }
   }
 }
 
+
+
   render() {
+    console.log(this.methods);
     return (
       <div className="App">
         <div className="flex-wrapper">
             <Casing buttons={this.buttons} 
             screenDigit={this.state.screenDigit} 
-            currentOperation={this.state.currentOperation} 
-            addToOperation={this.addToOperation}
-            allClear={this.allClear} />
+            currentOperation={this.state.currentOperation}
+            handleBtnClick={this.handleBtnClick} />
         </div>
       </div>
     );

@@ -10,9 +10,8 @@ class ButtonRow extends React.Component {
                         .map((btn) => <Button 
                                         key={btn} 
                                         buttonText={btn} 
-                                        buttonValue={this.props.buttons[btn]} 
-                                        addToOperation={this.props.addToOperation}
-                                        allClear={this.props.allClear}
+                                        buttonValue={this.props.buttons[btn]}
+                                        handleBtnClick={this.props.handleBtnClick}
                                         />)
                 }
             </section>

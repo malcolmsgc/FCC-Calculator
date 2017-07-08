@@ -13,9 +13,8 @@ const Casing = (props) => {
                 {rows.map( (row) => <ButtonRow 
                                     key={row} 
                                     row={row} 
-                                    buttons={props.buttons[row]} 
-                                    addToOperation={props.addToOperation}
-                                    allClear={props.allClear}
+                                    buttons={props.buttons[row]}
+                                    handleBtnClick={props.handleBtnClick}
                                     /> 
                 )}
             </section>
