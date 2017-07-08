@@ -14,7 +14,9 @@ const Casing = (props) => {
                                     key={row} 
                                     row={row} 
                                     buttons={props.buttons[row]} 
-                                    addToOperation={props.addToOperation}/> 
+                                    addToOperation={props.addToOperation}
+                                    allClear={props.allClear}
+                                    /> 
                 )}
             </section>
             

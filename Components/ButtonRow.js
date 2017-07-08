@@ -12,6 +12,7 @@ class ButtonRow extends React.Component {
                                         buttonText={btn} 
                                         buttonValue={this.props.buttons[btn]} 
                                         addToOperation={this.props.addToOperation}
+                                        allClear={this.props.allClear}
                                         />)
                 }
             </section>

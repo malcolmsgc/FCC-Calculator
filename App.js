@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Casing from './Components/Casing';
 import './App.css';
+import { btnLabels } from './Components/content/btnLabels';
 
 class App extends Component {
 
@@ -13,37 +14,7 @@ constructor() {
   this.allClear = this.allClear.bind(this);
   this.brackets = this.brackets.bind(this);
   //state and content
-  this.buttons = {
-                row1: {
-                  AC: "AC",
-                  C: "C",
-                  "( )": "function to run",
-                  "+": "+"
-                },
-                row2: {
-                  "7": "7",
-                  "8": "8",
-                  "9": "9",
-                  "-": "-"
-                },
-                row3: {
-                  "4": "4",
-                  "5": "5",
-                  "6": "6",
-                  "x": "x"
-                },
-                row4: {
-                  "1": "1",
-                  "2": "2",
-                  "3": "3",
-                  "÷": "/"
-                },
-                row5: {
-                  "0": "0",
-                  ".": ".",
-                  "=": "="
-                }
-              }
+  this.buttons = btnLabels;
   this.state = {
     screenDigit: "0",
     currentOperation: "0"
@@ -83,11 +54,13 @@ addToOperation(btnValue) {
     });
 }
 
+
 //helper function to replace an operator with a new operator
 replaceOperator() {}
 
 //function for the "( )" button to figure out if opening or closing bracket needed
 brackets() {}
+
 
 handleKeyPress(e) {
   const valid = e.key.match(/[\d+=\-*/\.)(]|Backspace|Esc(ape)*|Enter/i) || e.keyCode === 13;
@@ -106,11 +79,41 @@ handleKeyPress(e) {
     case "*":           if (!this.state.screenDigit.match(/x/i)) this.addToOperation("x");
                         //key is * so needs translation
                         break;
+    case ".":            
     case "+":            
     case "-":           
     case "/":           if (this.state.screenDigit.match(operator)) break;
     default:            console.log(e.key)
                         this.addToOperation(e.key);
+  }
+}
+
+handleBtnClick(btnValue) {
+  const special = btnValue.match(/[+=\-x/)(]|( )|AC|C/i);
+  if (!special) {
+    this.addToOperation(btnValue);
+  }
+  else {
+    const operator = new RegExp(/[+=\-x/)(]/i);
+    switch (btnValue) {
+      case "C":   console.log('delete');
+                          this.deleteFromOperation();
+                          break;
+      case "AC":          this.allClear();
+                          break;
+      case "=":           console.log('= TO DO function');
+                          break;
+      case "( )":         console.log('() TO DO function');
+                          break;
+      case "*":           if (!this.state.screenDigit.match(/x/i)) this.addToOperation("x");
+                          //key is * so needs translation
+                          break;
+      case "+":            
+      case "-":           
+      case "/":           if (this.state.screenDigit.match(operator)) break;
+      default:            console.log(btnValue)
+                          this.addToOperation(btnValue);
+    }
   }
 }
 
@@ -121,7 +124,8 @@ handleKeyPress(e) {
             <Casing buttons={this.buttons} 
             screenDigit={this.state.screenDigit} 
             currentOperation={this.state.currentOperation} 
-            addToOperation={this.addToOperation} />
+            addToOperation={this.addToOperation}
+            allClear={this.allClear} />
         </div>
       </div>
     );
