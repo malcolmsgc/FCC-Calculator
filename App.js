@@ -61,6 +61,11 @@ addToOperation(btnValue) {
 replaceOperator(oldOperator, newOperator) {
   console.log(oldOperator, newOperator);
   if (oldOperator === newOperator) {console.log('same'); return}
+  else if (oldOperator === "/" && newOperator === "÷") {console.log('same ÷'); return}
+  else if (newOperator === "÷") {
+    this.deleteFromOperation();
+    this.addToOperation("/")
+  }
   else {
       this.deleteFromOperation();
       this.addToOperation(newOperator)
@@ -89,7 +94,7 @@ handleKeyPress(e) {
     case "=":           console.log('=');
                         break;
     case "*":           //key is * so needs translation
-                        if (!this.state.screenDigit.match(/x/i)) this.addToOperation("x");
+                        if (!this.state.screenDigit.match(operator)) this.addToOperation("x");
                         else this.replaceOperator(this.state.screenDigit, e.key);
                         break;
     case ".":           
@@ -112,7 +117,7 @@ handleBtnClick(buttonText) {
     this.addToOperation(buttonText);
   }
   else {
-    const operator = new RegExp(/[+=\-x/)(]/i);
+    const operator = new RegExp(/[+=\-x/]/i);
     switch (buttonText) {
       case "C":           console.log('delete');
                           this.deleteFromOperation();
@@ -123,14 +128,19 @@ handleBtnClick(buttonText) {
                           break;
       case "( )":         console.log('() TO DO function');
                           break;
-      case "÷":           if (!this.state.screenDigit.match(/\//i)) this.addToOperation("/");
+      case "÷":           if (!this.state.screenDigit.match(operator)) this.addToOperation("/");
+                          else this.replaceOperator(this.state.screenDigit, "÷");
                           break;
-                          
       case "+":            
       case "-":           
-      case "x":           if (this.state.screenDigit.match(operator)) break;
-      default:            console.log(buttonText)
-                          this.addToOperation(buttonText);
+      case "x":           if (!this.state.screenDigit.match(operator)) {
+                            this.addToOperation(buttonText);
+                          }
+                          else {
+                            this.replaceOperator(this.state.screenDigit, buttonText);
+                          }
+                          break;
+      default:            this.addToOperation(buttonText);
     }
   }
 }
