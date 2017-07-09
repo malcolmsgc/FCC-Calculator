@@ -11,6 +11,7 @@ constructor() {
   this.addToOperation = this.addToOperation.bind(this);
   this.handleBtnClick = this.handleBtnClick.bind(this);
   this.handleKeyPress = this.handleKeyPress.bind(this);
+  this.replaceOperator = this.replaceOperator.bind(this);
   this.deleteFromOperation = this.deleteFromOperation.bind(this);
   this.allClear = this.allClear.bind(this);
   this.brackets = this.brackets.bind(this);
@@ -26,7 +27,6 @@ constructor() {
 
 componentDidMount() {
   document.addEventListener('keyup', this.handleKeyPress);
-  //document.addEventListener('click', this.handleBtnClick);
 }
 
 // COMPONENT METHODS
@@ -58,16 +58,26 @@ addToOperation(btnValue) {
 
 
 //helper function to replace an operator with a new operator
-replaceOperator() {}
+replaceOperator(oldOperator, newOperator) {
+  console.log(oldOperator, newOperator);
+  if (oldOperator === newOperator) {console.log('same'); return}
+  else {
+      this.deleteFromOperation();
+      this.addToOperation(newOperator)
+  }
+return;
+}
 
 //function for the "( )" button to figure out if opening or closing bracket needed
 brackets() {}
 
 
 handleKeyPress(e) {
+  
   const valid = e.key.match(/[\d+=\-*/\.)(]|Backspace|Esc(ape)*|Enter/i) || e.keyCode === 13;
   if (!valid) return;
-  const operator = new RegExp(/[+=\-*/\.)(]/i);
+  const operator = new RegExp(/[+=\-*/\.]/i);
+  
   switch (e.key) {
     case "Backspace":   console.log('delete');
                         this.deleteFromOperation();
@@ -78,15 +88,21 @@ handleKeyPress(e) {
     case "Enter":
     case "=":           console.log('=');
                         break;
-    case "*":           if (!this.state.screenDigit.match(/x/i)) this.addToOperation("x");
-                        //key is * so needs translation
+    case "*":           //key is * so needs translation
+                        if (!this.state.screenDigit.match(/x/i)) this.addToOperation("x");
+                        else this.replaceOperator(this.state.screenDigit, e.key);
                         break;
-    case ".":            
+    case ".":           
     case "+":            
     case "-":           
-    case "/":           if (this.state.screenDigit.match(operator)) break;
-    default:            console.log(e.key)
-                        this.addToOperation(e.key);
+    case "/":           if (!this.state.screenDigit.match(operator)) {
+                          this.addToOperation(e.key);
+                        }
+                        else {
+                          this.replaceOperator(this.state.screenDigit, e.key);
+                        }
+                        break;
+    default:            this.addToOperation(e.key);
   }
 }
 
@@ -122,7 +138,6 @@ handleBtnClick(buttonText) {
 
 
   render() {
-    console.log(this.methods);
     return (
       <div className="App">
         <div className="flex-wrapper">
