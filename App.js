@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import math from 'mathjs';
 import Casing from './Components/Casing';
 import './App.css';
 import { btnLabels } from './Components/content/btnLabels';
@@ -15,6 +16,7 @@ constructor() {
   this.deleteFromOperation = this.deleteFromOperation.bind(this);
   this.allClear = this.allClear.bind(this);
   this.brackets = this.brackets.bind(this);
+  this.hitIt = this.hitIt.bind(this);
   //state and content
   this.buttons = btnLabels;
   this.state = {
@@ -92,6 +94,7 @@ handleKeyPress(e) {
                         break;
     case "Enter":
     case "=":           console.log('=');
+                        alert(this.hitIt(`<span>${this.state.currentOperation}</script>`));
                         break;
     case "*":           //key is * so needs translation
                         if (!this.state.screenDigit.match(operator)) this.addToOperation("x");
@@ -143,6 +146,17 @@ handleBtnClick(buttonText) {
       default:            this.addToOperation(buttonText);
     }
   }
+}
+
+//let's do the maths, people!
+hitIt(mathString) {
+  /* do some sanitisation - mostly as a just in case. 
+  The function SHOULD only be called on limited inputs */
+  mathString = mathString.replace(/<\/*script>|[<>]/gi, "");
+  console.log(mathString)
+  //replace string operators with mathematical operators
+  const result = typeof math.eval(mathString) === 'number' ? math.eval(mathString) : '';
+  return result;
 }
 
 
