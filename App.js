@@ -80,7 +80,6 @@ brackets() {}
 
 
 handleKeyPress(e) {
-  
   const valid = e.key.match(/[\d+=\-*/\.)(]|Backspace|Esc(ape)*|Enter/i) || e.keyCode === 13;
   if (!valid) return;
   const operator = new RegExp(/[+=\-*/\.]/i);
@@ -94,7 +93,7 @@ handleKeyPress(e) {
                         break;
     case "Enter":
     case "=":           console.log('=');
-                        alert(this.hitIt(`<span>${this.state.currentOperation}</script>`));
+                        alert(this.hitIt(this.state.currentOperation));
                         break;
     case "*":           //key is * so needs translation
                         if (!this.state.screenDigit.match(operator)) this.addToOperation("x");
@@ -127,7 +126,7 @@ handleBtnClick(buttonText) {
                           break;
       case "AC":          this.allClear();
                           break;
-      case "=":           console.log('= TO DO function');
+      case "=":           alert(this.hitIt(this.state.currentOperation));
                           break;
       case "( )":         console.log('() TO DO function');
                           break;
@@ -150,11 +149,12 @@ handleBtnClick(buttonText) {
 
 //let's do the maths, people!
 hitIt(mathString) {
-  /* do some sanitisation - mostly as a just in case. 
-  The function SHOULD only be called on limited inputs */
-  mathString = mathString.replace(/<\/*script>|[<>]/gi, "");
-  console.log(mathString)
+  // do some sanitisation - mostly as a just in case as the function SHOULD only be called on limited inputs
+  mathString = mathString.replace(/<\/*script>|[<>]/gi, "")
   //replace string operators with mathematical operators
+                        .replace(/x/ig, "*");
+  // make sure the last char isn't an operator
+  console.log(mathString)
   const result = typeof math.eval(mathString) === 'number' ? math.eval(mathString) : '';
   return result;
 }
