@@ -85,6 +85,8 @@ handleKeyPress(e) {
   const operator = new RegExp(/[+=\-*/\.]/i);
   
   switch (e.key) {
+    // TO DO Add case for brackets to prevent sets of brackets without operator in between
+    // e.g. 8+5*6-(7)()
     case "Backspace":   console.log('delete');
                         this.deleteFromOperation();
                         break;
@@ -156,9 +158,12 @@ hitIt(mathString) {
   // make sure the last char isn't an operator
   const endOfStr = mathString.length-1; // index of last character
   if (mathString.charAt(endOfStr).match(/[+\-*\/(]/i)) mathString = mathString.substring(0, endOfStr);
+  // TO DO need to handle final parenthesis - approach => check if num of open brackets === closed.
   console.log(mathString)
   const result = typeof math.eval(mathString) === 'number' ? math.eval(mathString).toString() : '';
-  console.log(`Eval: ${eval(mathString)}`);
+  console.log(`Eval: ${eval(mathString)}`); //check against library result to see if library is wasteful dependancy
+  // replace mathematical operators with string operators before it goes back into state
+  mathString = mathString.replace(/\*/ig, "x");
   this.setState({ screenDigit: result,
                   currentOperation: mathString });
   return result;
