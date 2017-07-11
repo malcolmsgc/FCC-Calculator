@@ -93,7 +93,7 @@ handleKeyPress(e) {
                         break;
     case "Enter":
     case "=":           console.log('=');
-                        alert(this.hitIt(this.state.currentOperation));
+                        this.hitIt(this.state.currentOperation);
                         break;
     case "*":           //key is * so needs translation
                         if (!this.state.screenDigit.match(operator)) this.addToOperation("x");
@@ -126,7 +126,7 @@ handleBtnClick(buttonText) {
                           break;
       case "AC":          this.allClear();
                           break;
-      case "=":           alert(this.hitIt(this.state.currentOperation));
+      case "=":           this.hitIt(this.state.currentOperation);
                           break;
       case "( )":         console.log('() TO DO function');
                           break;
@@ -154,8 +154,13 @@ hitIt(mathString) {
   //replace string operators with mathematical operators
                         .replace(/x/ig, "*");
   // make sure the last char isn't an operator
+  const endOfStr = mathString.length-1; // index of last character
+  if (mathString.charAt(endOfStr).match(/[+\-*\/(]/i)) mathString = mathString.substring(0, endOfStr);
   console.log(mathString)
-  const result = typeof math.eval(mathString) === 'number' ? math.eval(mathString) : '';
+  const result = typeof math.eval(mathString) === 'number' ? math.eval(mathString).toString() : '';
+  console.log(`Eval: ${eval(mathString)}`);
+  this.setState({ screenDigit: result,
+                  currentOperation: mathString });
   return result;
 }
 
