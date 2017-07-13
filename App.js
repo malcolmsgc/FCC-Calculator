@@ -87,10 +87,7 @@ handleKeyPress(e) {
   // boolean flag to check first entry is operand
   const first = /^\-?\(?\d+\.?\d*$/.test(this.state.currentOperation);
   switch (e.key) {
-    // TO DO Add case for brackets to prevent sets of brackets without operator in between
-    // e.g. 8+5*6-(7)()
     //TO DO only allow closing bracket if open bracket exists and is unclosed - check for number of open
-    //TO DO only allow closing bracket after operand
     case "(":           if (!/\)/.test(this.state.screenDigit)) this.addToOperation(e.key);
                         break;                        
     case ")":           if (  !first && 
