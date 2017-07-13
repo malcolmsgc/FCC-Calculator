@@ -80,21 +80,26 @@ brackets() {}
 
 
 handleKeyPress(e) {
+  // boolean flag for which keys to listen to
   const valid = e.key.match(/[\d+=\-*/\.)(]|Backspace|Esc(ape)*|Enter/i) || e.keyCode === 13;
   if (!valid) return;
   const operator = new RegExp(/[+=\-*/\.]/i);
-  //const first = (this.state.currentOperation.charAt(0) !== "0" &&
-  //              this.state.currentOperation.charAt(1) !== ".") ? true : false; 
-  //console.log({first}, this.state.currentOperation.length);
+  // boolean flag to check first entry is operand
+  const first = /^\-?\(?\d+\.?\d*$/.test(this.state.currentOperation);
   switch (e.key) {
     // TO DO Add case for brackets to prevent sets of brackets without operator in between
     // e.g. 8+5*6-(7)()
-    // case "(":           if (!first);
-    //                     break;
-    // case ")":           console.log('parenth');
-    //                     if (!first) {this.addToOperation(e.key);}
-    //                     console.log({first}, this.state.currentOperation.length);
-    //                     break;
+    //TO DO only allow closing bracket if open bracket exists and is unclosed - check for number of open
+    //TO DO only allow closing bracket after operand
+    case "(":           if (!/\)/.test(this.state.screenDigit)) this.addToOperation(e.key);
+                        break;                        
+    case ")":           if (  !first && 
+                              !operator.test(this.state.screenDigit) &&
+                              !/\(/.test(this.state.screenDigit) ) 
+                        { 
+                                this.addToOperation(e.key);
+                        }
+                        break;
     case "Backspace":   console.log('delete');
                         this.deleteFromOperation();
                         break;
@@ -108,11 +113,11 @@ handleKeyPress(e) {
     case "*":           //key is * so needs translation
                         if (!this.state.screenDigit.match(operator)) this.addToOperation("x");
                         else this.replaceOperator(this.state.screenDigit, e.key);
-                        break;
-    case ".":           
+                        break;        
+    case "-":
     case "+":            
-    case "-":           
-    case "/":           if (!this.state.screenDigit.match(operator)) {
+    case "/":           
+    case ".":           if (!this.state.screenDigit.match(operator)) {
                           this.addToOperation(e.key);
                         }
                         else {
@@ -120,6 +125,7 @@ handleKeyPress(e) {
                         }
                         break;
     default:            this.addToOperation(e.key);
+                        console.log({first});
   }
 }
 
@@ -194,3 +200,4 @@ hitIt(mathString) {
 }
 
 export default App;
+//TO DO refactor all match functions to test() where possible
