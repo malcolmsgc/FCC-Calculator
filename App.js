@@ -51,7 +51,7 @@ allClear() {
 addToOperation(btnValue) {
   //setState with callback
   this.setState((prevState) => {
-    return { currentOperation: prevState.currentOperation === "0" ? 
+    return { currentOperation: (prevState.currentOperation === "0" && btnValue != ".")  ? 
                                   prevState.currentOperation = btnValue :
                                   prevState.currentOperation += btnValue,
              screenDigit: btnValue }
@@ -83,10 +83,18 @@ handleKeyPress(e) {
   const valid = e.key.match(/[\d+=\-*/\.)(]|Backspace|Esc(ape)*|Enter/i) || e.keyCode === 13;
   if (!valid) return;
   const operator = new RegExp(/[+=\-*/\.]/i);
-  
+  //const first = (this.state.currentOperation.charAt(0) !== "0" &&
+  //              this.state.currentOperation.charAt(1) !== ".") ? true : false; 
+  //console.log({first}, this.state.currentOperation.length);
   switch (e.key) {
     // TO DO Add case for brackets to prevent sets of brackets without operator in between
     // e.g. 8+5*6-(7)()
+    // case "(":           if (!first);
+    //                     break;
+    // case ")":           console.log('parenth');
+    //                     if (!first) {this.addToOperation(e.key);}
+    //                     console.log({first}, this.state.currentOperation.length);
+    //                     break;
     case "Backspace":   console.log('delete');
                         this.deleteFromOperation();
                         break;
