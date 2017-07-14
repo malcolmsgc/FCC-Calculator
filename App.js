@@ -167,9 +167,22 @@ hitIt(mathString) {
   //replace string operators with mathematical operators
                         .replace(/x/ig, "*");
   // make sure the last char isn't an operator
-  const endOfStr = mathString.length-1; // index of last character
-  if (mathString.charAt(endOfStr).match(/[+\-*\/(]/i)) mathString = mathString.substring(0, endOfStr);
-  // TO DO need to handle final parenthesis - approach => check if num of open brackets === closed.
+  let endOfStr = mathString.length-1; // index of last character
+  while ( /[+\-*\/(]/i.test(mathString.charAt(endOfStr)) ){console.log(mathString); mathString = mathString.substring(0, endOfStr); endOfStr--;}
+  // Handle parenthesis matching
+  console.log(mathString);
+  let openParen = mathString.match(/\(/g) || []; //match returns array and then use length to count occurance in string
+  let closeParen = mathString.match(/\)/g) || []; //match returns array and then use length to count occurance in string
+  openParen = openParen.length;
+  closeParen = closeParen.length;
+  console.log(openParen, closeParen);
+  if (openParen !== closeParen) {
+    const err = (openParen > closeParen) ? new Error("an unclosed parenthesis"): new Error("a missing opening bracket") ;
+    console.error(err);
+    alert(`Your operation has mismatched parenthseses
+    You have ${err.message}`);
+    return err;
+  }
   console.log(mathString)
   const result = typeof math.eval(mathString) === 'number' ? math.eval(mathString).toString() : '';
   console.log(`Eval: ${eval(mathString)}`); //check against library result to see if library is wasteful dependancy
