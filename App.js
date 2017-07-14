@@ -168,7 +168,11 @@ hitIt(mathString) {
                         .replace(/x/ig, "*");
   // make sure the last char isn't an operator
   let endOfStr = mathString.length-1; // index of last character
-  while ( /[+\-*\/(]/i.test(mathString.charAt(endOfStr)) ){console.log(mathString); mathString = mathString.substring(0, endOfStr); endOfStr--;}
+  while ( /[+\-*\/(]/i.test(mathString.charAt(endOfStr)) ) {
+    console.log(mathString); 
+    mathString = mathString.substring(0, endOfStr); 
+    endOfStr--;
+  }
   // Handle parenthesis matching
   console.log(mathString);
   let openParen = mathString.match(/\(/g) || []; //match returns array and then use length to count occurance in string
