@@ -170,7 +170,12 @@ hitIt(mathString) {
   let endOfStr = mathString.length-1; // index of last character
   while ( /[+\-*\/(\.]/i.test(mathString.charAt(endOfStr)) ) {
     mathString = mathString.substring(0, endOfStr); 
+    //prevent solo operator from stripping out state i.e. a single + being stripped and collapsing screen
+    if (endOfStr === 0) {mathString = "0"}; 
+    console.log(endOfStr);
     endOfStr--;
+    
+    
   }
   // Handle parenthesis matching
   let openParen = mathString.match(/\(/g) || []; //match returns array and then use length to count occurance in string
