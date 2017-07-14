@@ -113,14 +113,14 @@ handleKeyPress(e) {
                         break;        
     case "-":
     case "+":            
-    case "/":           
-    case ".":           if (!this.state.screenDigit.match(operator)) {
+    case "/":           if (!this.state.screenDigit.match(operator)) {
                           this.addToOperation(e.key);
                         }
                         else {
                           this.replaceOperator(this.state.screenDigit, e.key);
                         }
                         break;
+    case ".":           
     default:            this.addToOperation(e.key);
                         console.log({first});
   }
@@ -166,15 +166,13 @@ hitIt(mathString) {
   mathString = mathString.replace(/<\/*script>|[<>]/gi, "")
   //replace string operators with mathematical operators
                         .replace(/x/ig, "*");
-  // make sure the last char isn't an operator
+  // make sure the last char isn't an operator. Allow closing bracket
   let endOfStr = mathString.length-1; // index of last character
-  while ( /[+\-*\/(]/i.test(mathString.charAt(endOfStr)) ) {
-    console.log(mathString); 
+  while ( /[+\-*\/(\.]/i.test(mathString.charAt(endOfStr)) ) {
     mathString = mathString.substring(0, endOfStr); 
     endOfStr--;
   }
   // Handle parenthesis matching
-  console.log(mathString);
   let openParen = mathString.match(/\(/g) || []; //match returns array and then use length to count occurance in string
   let closeParen = mathString.match(/\)/g) || []; //match returns array and then use length to count occurance in string
   openParen = openParen.length;
@@ -187,7 +185,6 @@ hitIt(mathString) {
     You have ${err.message}`);
     return err;
   }
-  console.log(mathString)
   const result = typeof math.eval(mathString) === 'number' ? math.eval(mathString).toString() : '';
   console.log(`Eval: ${eval(mathString)}`); //check against library result to see if library is wasteful dependancy
   // replace mathematical operators with string operators before it goes back into state
@@ -214,4 +211,4 @@ hitIt(mathString) {
 }
 
 export default App;
-//TO DO refactor all match functions to test() where possible
+//TO DO refactor all match methods to test() where possible
