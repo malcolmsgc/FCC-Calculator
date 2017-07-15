@@ -76,9 +76,42 @@ return;
 }
 
 //function for the "( )" button to figure out if opening or closing bracket needed
-brackets() {}
+brackets(mathString) {
+  let openParen = mathString.match(/\(/g) || []; //match returns array and then use length to count occurance in string
+  let closeParen = mathString.match(/\)/g) || []; //match returns array and then use length to count occurance in string
+  openParen = openParen.length;
+  closeParen = closeParen.length;
+  const endOfStr = mathString.length-1; // index of last character
+  console.log(mathString.charAt(endOfStr));
+  if (openParen !== closeParen && openParen > 0) {
+    if ( !/[+\-*\/\(]/.test(mathString.charAt(endOfStr)) ) {
+      mathString = `${mathString})`;
+    }
+    else if ( /\(/.test(mathString.charAt(endOfStr)) ) {
+      mathString = `${mathString}(`;
+    }
+    else {
+      console.error(new Error("bracket disallowed"));
+      return;
+    }
+  }
+  else { 
+    // if nothing in current operation insert opening bracket
+    if (mathString === "0") mathString = "(";
+    //check if operator at end of string
+    if (/\./.test(mathString.charAt(endOfStr))) console.error(new Error("Not allowed bracket directly after period"));
+    if ( /[+\-*\/]/.test(mathString.charAt(endOfStr)) ) {
+      mathString = `${mathString}(`;
+    }
+    else {
+      console.error(new Error("bracket disallowed"));
+      return;
+    }
+  }
+  this.setState({ currentOperation: mathString });
+}
 
-
+//TO DO disallow numeral after closing bracket
 handleKeyPress(e) {
   // boolean flag for which keys to listen to
   const valid = e.key.match(/[\d+=\-*/\.)(]|Backspace|Esc(ape)*|Enter/i) || e.keyCode === 13;
@@ -141,7 +174,7 @@ handleBtnClick(buttonText) {
                           break;
       case "=":           this.hitIt(this.state.currentOperation);
                           break;
-      case "( )":         console.log('() TO DO function');
+      case "( )":         this.brackets(this.state.currentOperation);
                           break;
       case "÷":           if (!this.state.screenDigit.match(operator)) this.addToOperation("/");
                           else this.replaceOperator(this.state.screenDigit, "÷");
@@ -174,8 +207,6 @@ hitIt(mathString) {
     if (endOfStr === 0) {mathString = "0"}; 
     console.log(endOfStr);
     endOfStr--;
-    
-    
   }
   // Handle parenthesis matching
   let openParen = mathString.match(/\(/g) || []; //match returns array and then use length to count occurance in string
