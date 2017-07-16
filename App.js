@@ -12,11 +12,12 @@ constructor() {
   this.addToOperation = this.addToOperation.bind(this);
   this.handleBtnClick = this.handleBtnClick.bind(this);
   this.handleKeyPress = this.handleKeyPress.bind(this);
-  this.replaceOperator = this.replaceOperator.bind(this);
   this.deleteFromOperation = this.deleteFromOperation.bind(this);
   this.allClear = this.allClear.bind(this);
   this.brackets = this.brackets.bind(this);
   this.hitIt = this.hitIt.bind(this);
+  //helpers
+  this.replaceOperator = this.replaceOperator.bind(this);
   //state and content
   this.buttons = btnLabels;
   this.state = {
@@ -51,7 +52,7 @@ allClear() {
 addToOperation(btnValue) {
   //setState with callback
   this.setState((prevState) => {
-    return { currentOperation: (prevState.currentOperation === "0" && btnValue != ".")  ? 
+    return { currentOperation: (prevState.currentOperation === "0" && btnValue !== ".")  ? 
                                   prevState.currentOperation = btnValue :
                                   prevState.currentOperation += btnValue,
              screenDigit: btnValue }
@@ -63,6 +64,12 @@ addToOperation(btnValue) {
 replaceOperator(oldOperator, newOperator) {
   console.log(oldOperator, newOperator);
   if (oldOperator === newOperator) {console.log('same'); return}
+  //allow addition of negative after bracket
+  if (oldOperator === "("  && newOperator === "-") {
+    this.addToOperation(newOperator);
+    return} 
+  //prevent replacement of opening bracket for remaining operators
+  if (oldOperator === "(") return; 
   else if (oldOperator === "/" && newOperator === "÷") {console.log('same ÷'); return}
   else if (newOperator === "÷") {
     this.deleteFromOperation();
@@ -75,40 +82,56 @@ replaceOperator(oldOperator, newOperator) {
 return;
 }
 
+
 //function for the "( )" button to figure out if opening or closing bracket needed
 brackets(mathString) {
+  //replace string operators with mathematical operators
+  mathString = mathString.replace(/x/ig, "*");
+  let bracket; //use to set screenDigit state and to append to mathString to create new currentOperation
   let openParen = mathString.match(/\(/g) || []; //match returns array and then use length to count occurance in string
   let closeParen = mathString.match(/\)/g) || []; //match returns array and then use length to count occurance in string
   openParen = openParen.length;
   closeParen = closeParen.length;
   const endOfStr = mathString.length-1; // index of last character
-  console.log(mathString.charAt(endOfStr));
+  console.log(mathString.charAt(endOfStr), openParen, closeParen);
   if (openParen !== closeParen && openParen > 0) {
     if ( !/[+\-*\/\(]/.test(mathString.charAt(endOfStr)) ) {
-      mathString = `${mathString})`;
+      bracket = ")";
     }
     else if ( /\(/.test(mathString.charAt(endOfStr)) ) {
-      mathString = `${mathString}(`;
+      bracket = "(";
     }
     else {
       console.error(new Error("bracket disallowed"));
       return;
     }
+    mathString = `${mathString}${bracket}`;
   }
   else { 
     // if nothing in current operation insert opening bracket
-    if (mathString === "0") mathString = "(";
-    //check if operator at end of string
-    if (/\./.test(mathString.charAt(endOfStr))) console.error(new Error("Not allowed bracket directly after period"));
-    if ( /[+\-*\/]/.test(mathString.charAt(endOfStr)) ) {
-      mathString = `${mathString}(`;
+    if (mathString === "0") {
+      mathString = "(";
+      bracket = "(";
     }
     else {
-      console.error(new Error("bracket disallowed"));
-      return;
+        //check if operator at end of string
+      if (/\./.test(mathString.charAt(endOfStr))) console.error(new Error("Not allowed bracket directly after period"));
+      if ( /[+\-*\/]/.test(mathString.charAt(endOfStr)) ) {
+        bracket = "(";
+      }
+      else {
+        console.error(new Error("bracket disallowed"));
+        return;
+      }
+      mathString = `${mathString}${bracket}`;
     }
   }
-  this.setState({ currentOperation: mathString });
+  //replace math operators with string operators
+  mathString = mathString.replace(/\*/ig, "x");
+  this.setState({ 
+    currentOperation: mathString ,
+    screenDigit: bracket                
+  });
 }
 
 //TO DO disallow numeral after closing bracket
@@ -116,7 +139,7 @@ handleKeyPress(e) {
   // boolean flag for which keys to listen to
   const valid = e.key.match(/[\d+=\-*/\.)(]|Backspace|Esc(ape)*|Enter/i) || e.keyCode === 13;
   if (!valid) return;
-  const operator = new RegExp(/[+=\-*/\.]/i);
+  const operator = new RegExp(/[+=\-*/\(]/i); //opening bracket included to prevent operator directly after (
   // boolean flag to check first entry is operand
   const first = /^\-?\(?\d+\.?\d*$/.test(this.state.currentOperation);
   switch (e.key) {
@@ -159,13 +182,16 @@ handleKeyPress(e) {
   }
 }
 
+// TO DO add case for "." to insert leading 0 is used without integer part
 handleBtnClick(buttonText) {
   const special = buttonText.match(/[+=\-x÷)(]|( )|AC|C/i);
   if (!special) {
-    this.addToOperation(buttonText);
+    // if statement prevents digits directly after closing bracket
+    // allows digits in all other cases
+    if (this.state.screenDigit !== ")") this.addToOperation(buttonText);
   }
   else {
-    const operator = new RegExp(/[+=\-x/]/i);
+    const operator = new RegExp(/[+=\-x/\(]/i); //opening bracket included to prevent operator directly after (
     switch (buttonText) {
       case "C":           console.log('delete');
                           this.deleteFromOperation();
