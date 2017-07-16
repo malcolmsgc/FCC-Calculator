@@ -18,6 +18,7 @@ constructor() {
   this.hitIt = this.hitIt.bind(this);
   //helpers
   this.replaceOperator = this.replaceOperator.bind(this);
+  this.playKeySound = this.playKeySound.bind(this);
   //state and content
   this.buttons = btnLabels;
   this.state = {
@@ -48,8 +49,9 @@ allClear() {
     });
 }
 
-
+//TO DO prevent or strip 0 before integer i.e. no 5x02, only 5x2.
 addToOperation(btnValue) {
+  btnValue = btnValue.toLowerCase();
   //setState with callback
   this.setState((prevState) => {
     return { currentOperation: (prevState.currentOperation === "0")  ? 
@@ -134,6 +136,12 @@ brackets(mathString) {
   });
 }
 
+playKeySound() {
+  this.refs.keysound.volume = 0.3;
+  this.refs.keysound.currentTime = 0;
+  this.refs.keysound.play();
+}
+
 //TO DO disallow numeral after closing bracket
 handleKeyPress(e) {
   // boolean flag for which keys to listen to
@@ -197,9 +205,9 @@ handleKeyPress(e) {
                         if (this.state.screenDigit !== ")") this.addToOperation(e.key);
                         console.log({first});
   }
+  this.playKeySound();
 }
 
-// TO DO add case for "." to insert leading 0 is used without integer part
 handleBtnClick(buttonText) {
   const special = buttonText.match(/[+=\-x÷)(\.]|( )|AC|C/i);
   const started = !/^0$/.test(this.state.currentOperation); //boolean to show if operation begun
@@ -248,6 +256,7 @@ handleBtnClick(buttonText) {
       default:            this.addToOperation(buttonText);
     }
   }
+  this.playKeySound();
 }
 
 //let's do the maths, people!
@@ -287,8 +296,6 @@ hitIt(mathString) {
   return result;
 }
 
-
-
   render() {
     return (
       <div className="App">
@@ -298,10 +305,14 @@ hitIt(mathString) {
             currentOperation={this.state.currentOperation}
             handleBtnClick={this.handleBtnClick} />
         </div>
+        <audio ref="keysound" src="/sounds/keypress.wav"></audio>
       </div>
     );
   }
 }
 
 export default App;
+
 //TO DO refactor all match methods to test() where possible
+//TO DO abstract audio into separate component
+//TO DO refactor button generation to use array instead of object
