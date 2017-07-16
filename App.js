@@ -52,10 +52,10 @@ allClear() {
 addToOperation(btnValue) {
   //setState with callback
   this.setState((prevState) => {
-    return { currentOperation: (prevState.currentOperation === "0" && btnValue !== ".")  ? 
+    return { currentOperation: (prevState.currentOperation === "0")  ? 
                                   prevState.currentOperation = btnValue :
                                   prevState.currentOperation += btnValue,
-             screenDigit: btnValue }
+             screenDigit: btnValue.charAt(btnValue.length-1) }
     });
 }
 
@@ -140,6 +140,7 @@ handleKeyPress(e) {
   const valid = e.key.match(/[\d+=\-*/\.)(]|Backspace|Esc(ape)*|Enter/i) || e.keyCode === 13;
   if (!valid) return;
   const operator = new RegExp(/[+=\-*/\(]/i); //opening bracket included to prevent operator directly after (
+  const started = !/^0$/.test(this.state.currentOperation); //boolean to show if operation begun
   // boolean flag to check first entry is operand
   const first = /^\-?\(?\d+\.?\d*$/.test(this.state.currentOperation);
   switch (e.key) {
@@ -168,15 +169,28 @@ handleKeyPress(e) {
                         else this.replaceOperator(this.state.screenDigit, e.key);
                         break;        
     case "-":
-    case "+":            
+    case "+":           
     case "/":           if (!this.state.screenDigit.match(operator)) {
-                          this.addToOperation(e.key);
+                          if (started || (!started && e.key === "-") ) this.addToOperation(e.key);
                         }
                         else {
                           this.replaceOperator(this.state.screenDigit, e.key);
                         }
                         break;
     case ".":           
+                        if (  !/\./.test(this.state.screenDigit) && //dissallow period after a period
+                              !/\d+\.\d+$/g.test(this.state.currentOperation) //dissallow period after a decimal
+                        ) {
+                          if (started) {/\d/.test(this.state.screenDigit) ? 
+                            this.addToOperation(e.key) :
+                            this.addToOperation(`0${e.key}`);
+                          }
+                          else {
+                            this.addToOperation(`0${e.key}`);
+                          }
+                        }
+                          break;         
+                        
     default:            // if statement prevents digits directly after closing bracket
                         // allows digits in all other cases
                         if (this.state.screenDigit !== ")") this.addToOperation(e.key);
