@@ -141,7 +141,7 @@ handleKeyPress(e) {
   if (!valid) return;
   const operator = new RegExp(/[+=\-*/\(]/i); //opening bracket included to prevent operator directly after (
   const started = !/^0$/.test(this.state.currentOperation); //boolean to show if operation begun
-  // boolean flag to check first entry is operand
+  // boolean flag to check first entry is operand - used for brackets keys
   const first = /^\-?\(?\d+\.?\d*$/.test(this.state.currentOperation);
   switch (e.key) {
     //TO DO only allow closing bracket if open bracket exists and is unclosed - check for number of open
@@ -177,8 +177,7 @@ handleKeyPress(e) {
                           this.replaceOperator(this.state.screenDigit, e.key);
                         }
                         break;
-    case ".":           
-                        if (  !/\./.test(this.state.screenDigit) && //dissallow period after a period
+    case ".":           if (  !/\./.test(this.state.screenDigit) && //dissallow period after a period
                               !/\d+\.\d+$/g.test(this.state.currentOperation) //dissallow period after a decimal
                         ) {
                           if (started) {/\d/.test(this.state.screenDigit) ? 
@@ -189,8 +188,7 @@ handleKeyPress(e) {
                             this.addToOperation(`0${e.key}`);
                           }
                         }
-                          break;         
-                        
+                          break;  
     default:            // if statement prevents digits directly after closing bracket
                         // allows digits in all other cases
                         if (this.state.screenDigit !== ")") this.addToOperation(e.key);
@@ -200,7 +198,8 @@ handleKeyPress(e) {
 
 // TO DO add case for "." to insert leading 0 is used without integer part
 handleBtnClick(buttonText) {
-  const special = buttonText.match(/[+=\-x÷)(]|( )|AC|C/i);
+  const special = buttonText.match(/[+=\-x÷)(\.]|( )|AC|C/i);
+  const started = !/^0$/.test(this.state.currentOperation); //boolean to show if operation begun
   if (!special) {
     // if statement prevents digits directly after closing bracket
     // allows digits in all other cases
@@ -229,6 +228,18 @@ handleBtnClick(buttonText) {
                           else {
                             this.replaceOperator(this.state.screenDigit, buttonText);
                           }
+                          break;
+      case ".":           if (  !/\./.test(this.state.screenDigit) && //dissallow period after a period
+                              !/\d+\.\d+$/g.test(this.state.currentOperation) //dissallow period after a decimal
+                        ) {
+                          if (started) {/\d/.test(this.state.screenDigit) ? 
+                            this.addToOperation(buttonText) :
+                            this.addToOperation(`0${buttonText}`);
+                          }
+                          else {
+                            this.addToOperation(`0${buttonText}`);
+                          }
+                        }
                           break;
       default:            this.addToOperation(buttonText);
     }
