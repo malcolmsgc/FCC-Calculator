@@ -177,7 +177,9 @@ handleKeyPress(e) {
                         }
                         break;
     case ".":           
-    default:            this.addToOperation(e.key);
+    default:            // if statement prevents digits directly after closing bracket
+                        // allows digits in all other cases
+                        if (this.state.screenDigit !== ")") this.addToOperation(e.key);
                         console.log({first});
   }
 }
