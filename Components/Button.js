@@ -9,7 +9,7 @@ class Button extends React.Component {
         let { buttonText, buttonValue, handleBtnClick } = this.props;
          return (
                 <button className="button" 
-                data-value={buttonValue} 
+                data-btn={buttonText} 
                 onClick={() => {
                     console.log(buttonText);
                     handleBtnClick(buttonText); 

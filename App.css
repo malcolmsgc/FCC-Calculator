@@ -81,14 +81,14 @@
   background-color: honeydew;
 }
 
-.row5 > .button[data-value="="] {
+.row5 > .button[data-btn="="] {
   flex: 1 1 50%;
   background-color: darkcyan;
   color: honeydew;
 }
 
-.row1 > .button[data-value="AC"],
-.row1 > .button[data-value="C"] {
+.row1 > .button[data-btn="AC"],
+.row1 > .button[data-btn="C"] {
   background-color: slategrey;
   color: honeydew;
 }

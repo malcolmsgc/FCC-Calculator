@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import math from 'mathjs';
 import Casing from './Components/Casing';
-import KeySound from './Components/KeySound';
 import './App.css';
 import { btnLabels } from './Components/content/btnLabels';
 
