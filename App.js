@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import math from 'mathjs';
 import Casing from './Components/Casing';
+import KeySound from './Components/KeySound';
 import './App.css';
 import { btnLabels } from './Components/content/btnLabels';
 
@@ -314,5 +315,4 @@ hitIt(mathString) {
 export default App;
 
 //TO DO refactor all match methods to test() where possible
-//TO DO abstract audio into separate component
 //TO DO refactor button generation to use array instead of object
