@@ -146,20 +146,25 @@ playKeySound() {
 handleKeyPress(e) {
   // boolean flag for which keys to listen to
   const valid = /[\d+=\-*/\.)(]|Backspace|Esc(ape)*|Enter/i.test(e.key) || e.keyCode === 13;
-  console.log({valid});
   if (!valid) return;
   const operator = new RegExp(/[+=\-*x/\(]/i); //opening bracket included to prevent operator directly after (
   const started = !/^0$/.test(this.state.currentOperation); //boolean to show if operation begun
-  console.log({started});
-  // boolean flag to check first entry is operand - used for brackets keys
-  const first = /^\-?\(?\d+\.?\d*$/.test(this.state.currentOperation);
+  const first = /^\-?\(?\d+\.?\d*$/.test(this.state.currentOperation); // boolean flag to check first entry is operand - used for brackets keys
+  const lastDigit = this.state.currentOperation.substr(-1); // use to run tests on final char of operation
+  let openParen = this.state.currentOperation.match(/\(/g) || []; //match returns array and then use length to count occurance in string
+  let closeParen = this.state.currentOperation.match(/\)/g) || []; //match returns array and then use length to count occurance in string
+  openParen = openParen.length;
+  closeParen = closeParen.length;
   switch (e.key) {
     //TO DO only allow closing bracket if open bracket exists and is unclosed - check for number of open
-    case "(":           if (!/\)/.test(this.state.screenDigit)) this.addToOperation(e.key);
+    //case "(":           if (!/\)/.test(this.state.screenDigit)) this.addToOperation(e.key);
+    case "(":           if (!/\)/.test(lastDigit)) this.addToOperation(e.key);
                         break;                        
     case ")":           if (  !first && 
-                              !operator.test(this.state.screenDigit) &&
-                              !/\(/.test(this.state.screenDigit) ) 
+                              !operator.test(lastDigit) &&
+                              !/\(/.test(lastDigit) &&
+                              (openParen > closeParen) //prevent multiple closing brackets unless opening bracket exists
+                            ) 
                         { 
                                 this.addToOperation(e.key);
                         }
@@ -176,23 +181,23 @@ handleKeyPress(e) {
                         break;
     case "*":           //key is * so needs translation
                         if (started) {
-                          if (!operator.test(this.state.screenDigit)) this.addToOperation("x");
-                          else this.replaceOperator(this.state.screenDigit, e.key);
+                          if (!operator.test(lastDigit)) this.addToOperation("x");
+                          else this.replaceOperator(lastDigit, "x");
                         }
                         break;        
     case "-":
     case "+":           
-    case "/":           if (!operator.test(this.state.screenDigit)) {
+    case "/":           if (!operator.test(lastDigit)) {
                           if (started || (!started && e.key === "-") ) this.addToOperation(e.key);
                         }
                         else {
-                          this.replaceOperator(this.state.screenDigit, e.key);
+                          this.replaceOperator(lastDigit, e.key);
                         }
                         break;
-    case ".":           if (  !/\./.test(this.state.screenDigit) && //dissallow period after a period
+    case ".":           if (  !/\./.test(lastDigit) && //dissallow period after a period
                               !/\d+\.\d+$/g.test(this.state.currentOperation) //dissallow period after a decimal
                         ) {
-                          if (started) {/\d$/g.test(this.state.screenDigit) ? 
+                          if (started) {/\d$/g.test(lastDigit) ? 
                             this.addToOperation(e.key) :
                             this.addToOperation(`0${e.key}`);
                           }
@@ -203,7 +208,7 @@ handleKeyPress(e) {
                           break;  
     default:            // if statement prevents digits directly after closing bracket
                         // allows digits in all other cases
-                        if (this.state.screenDigit !== ")") this.addToOperation(e.key);
+                        if (lastDigit !== ")") this.addToOperation(e.key);
                         console.log({first});
   }
   this.playKeySound();
@@ -212,11 +217,12 @@ handleKeyPress(e) {
 handleBtnClick(buttonText) {
   const special = /[+=\-x÷)(\.]|( )|AC|C/i.test(buttonText);
   const started = !/^0$/.test(this.state.currentOperation); //boolean to show if operation begun
-  console.log({started});
+  const lastDigit = this.state.currentOperation.substr(-1); // use to run tests on final char of operation
+  console.log(`lastDigit = ${lastDigit}`);
   if (!special) {
     // if statement prevents digits directly after closing bracket
     // allows digits in all other cases
-    if (this.state.screenDigit !== ")") this.addToOperation(buttonText);
+    if (lastDigit !== ")") this.addToOperation(buttonText);
   }
   else {
     const operator = new RegExp(/[+=\-x/\(]/i); //opening bracket included to prevent operator directly after (
@@ -230,22 +236,22 @@ handleBtnClick(buttonText) {
                           break;
       case "( )":         this.brackets(this.state.currentOperation);
                           break;
-      case "÷":           if (!operator.test(this.state.screenDigit)) this.addToOperation("/");
-                          else this.replaceOperator(this.state.screenDigit, "÷");
+      case "÷":           if (!operator.test(lastDigit)) this.addToOperation("/");
+                          else this.replaceOperator(lastDigit, "÷");
                           break;
       case "+":            
       case "-":           
-      case "x":           if (!operator.test(this.state.screenDigit)) {
+      case "x":           if (!operator.test(lastDigit)) {
                             this.addToOperation(buttonText);
                           }
                           else {
-                            this.replaceOperator(this.state.screenDigit, buttonText);
+                            this.replaceOperator(lastDigit, buttonText);
                           }
                           break;
-      case ".":           if (  !/\.$/g.test(this.state.screenDigit) && //dissallow period after a period
+      case ".":           if (  !/\.$/g.test(lastDigit) && //dissallow period after a period
                               !/\d+\.\d+$/g.test(this.state.currentOperation) //dissallow period after a decimal
                         ) {
-                          if (started) {/\d$/g.test(this.state.screenDigit) ? 
+                          if (started) {/\d$/g.test(lastDigit) ? 
                             this.addToOperation(buttonText) :
                             this.addToOperation(`0${buttonText}`);
                           }
@@ -313,6 +319,3 @@ hitIt(mathString) {
 }
 
 export default App;
-
-//TO DO fix bug that runs replaceoperator func when neg number as screendigit 
-// - prob need to replace references to screendigit with a lookup of last character in operation
