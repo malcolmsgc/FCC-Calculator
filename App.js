@@ -49,17 +49,8 @@ allClear() {
     });
 }
 
-// TO refactor callback to strip 0 before integer i.e. no 5x02, only 5x2
 addToOperation(btnValue) {
-  btnValue = btnValue.toLowerCase();
-  // strip 0 before integer i.e. no 5x02, only 5x2.
-  // handled here and not prevent in input functions 
-  // as 04 may seem valid to user, however it kills math.eval methos used for final calc
-  
-  // if (this.state.currentOperation.length > 1) {
-  //   let 
-  // }
-  
+  btnValue = btnValue.toLowerCase();  
   //setState with callback
   this.setState((prevState) => {
     return { currentOperation: (prevState.currentOperation === "0")  ? 
@@ -278,7 +269,9 @@ hitIt(mathString) {
   // do some sanitisation - mostly as a just in case as the function SHOULD only be called on limited inputs
   mathString = mathString.replace(/<\/*script>|[<>]/gi, "")
   //replace string operators with mathematical operators
-                        .replace(/x/ig, "*");
+                        .replace(/x/ig, "*")
+  // strip 0 before integer i.e. no 5x02, only 5x2 it kills math.eval method used below
+                        .replace(/(0+)(\d+)/g, (match, cg1, cg2) => cg2);
   // make sure the last char isn't an operator. Allow closing bracket
   let endOfStr = mathString.length-1; // index of last character
   while ( /[+\-*\/(\.]/i.test(mathString.charAt(endOfStr)) ) {
