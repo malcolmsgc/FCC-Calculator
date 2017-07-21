@@ -63,15 +63,14 @@ addToOperation(btnValue) {
 
 //helper function to replace an operator with a new operator
 replaceOperator(oldOperator, newOperator) {
-  console.log(oldOperator, newOperator);
-  if (oldOperator === newOperator) {console.log('same'); return}
+  if (oldOperator === newOperator) {return}
   //allow addition of negative after bracket
   if (oldOperator === "("  && newOperator === "-") {
     this.addToOperation(newOperator);
     return} 
   //prevent replacement of opening bracket for remaining operators
   if (oldOperator === "(") return; 
-  else if (oldOperator === "/" && newOperator === "÷") {console.log('same ÷'); return}
+  else if (oldOperator === "/" && newOperator === "÷") {return}
   else if (newOperator === "÷") {
     this.deleteFromOperation();
     this.addToOperation("/")
@@ -94,7 +93,6 @@ brackets(mathString) {
   openParen = openParen.length;
   closeParen = closeParen.length;
   const endOfStr = mathString.length-1; // index of last character
-  console.log(mathString.charAt(endOfStr), openParen, closeParen);
   if (openParen !== closeParen && openParen > 0) {
     if ( !/[+\-*\/\(]/.test(mathString.charAt(endOfStr)) ) {
       bracket = ")";
@@ -168,15 +166,13 @@ handleKeyPress(e) {
                                 this.addToOperation(e.key);
                         }
                         break;
-    case "Backspace":   console.log('delete');
-                        this.deleteFromOperation();
+    case "Backspace":   this.deleteFromOperation();
                         break;
     case "Esc":
     case "Escape":      this.allClear();
                         break;
     case "Enter":
-    case "=":           console.log('=');
-                        this.hitIt(this.state.currentOperation);
+    case "=":           this.hitIt(this.state.currentOperation);
                         break;
     case "*":           //key is * so needs translation
                         if (started) {
@@ -216,7 +212,6 @@ handleBtnClick(buttonText) {
   const special = /[+=\-x÷)(\.]|( )|AC|C/i.test(buttonText);
   const started = !/^0$/.test(this.state.currentOperation); //boolean to show if operation begun
   const lastDigit = this.state.currentOperation.substr(-1); // use to run tests on final char of operation
-  console.log(`lastDigit = ${lastDigit}`);
   if (!special) {
     // if statement prevents digits directly after closing bracket
     // allows digits in all other cases
@@ -225,8 +220,7 @@ handleBtnClick(buttonText) {
   else {
     const operator = new RegExp(/[+=\-x/\(]/i); //opening bracket included to prevent operator directly after (
     switch (buttonText) {
-      case "C":           console.log('delete');
-                          this.deleteFromOperation();
+      case "C":           this.deleteFromOperation();
                           break;
       case "AC":          this.allClear();
                           break;
@@ -278,7 +272,6 @@ hitIt(mathString) {
     mathString = mathString.substring(0, endOfStr); 
     //prevent solo operator from stripping out state i.e. a single + being stripped and collapsing screen
     if (endOfStr === 0) {mathString = "0"}; 
-    console.log(endOfStr);
     endOfStr--;
   }
   // Handle parenthesis matching
@@ -286,7 +279,6 @@ hitIt(mathString) {
   let closeParen = mathString.match(/\)/g) || []; //match returns array and then use length to count occurance in string
   openParen = openParen.length;
   closeParen = closeParen.length;
-  console.log(openParen, closeParen);
   if (openParen !== closeParen) {
     const err = (openParen > closeParen) ? new Error("an unclosed parenthesis"): new Error("a missing opening bracket") ;
     console.error(err);
