@@ -49,9 +49,14 @@ allClear() {
     });
 }
 
-//TO DO prevent or strip 0 before integer i.e. no 5x02, only 5x2.
 addToOperation(btnValue) {
   btnValue = btnValue.toLowerCase();
+  // strip 0 before integer i.e. no 5x02, only 5x2.
+  // handled here and not prevent in input functions 
+  // as 04 may seem valid to user, however it kills math.eval methos used for final calc
+  if (this.state.currentOperation.length > 1) {
+    let 
+  }
   //setState with callback
   this.setState((prevState) => {
     return { currentOperation: (prevState.currentOperation === "0")  ? 
@@ -208,8 +213,7 @@ handleKeyPress(e) {
                           break;  
     default:            // if statement prevents digits directly after closing bracket
                         // allows digits in all other cases
-                        if (lastDigit !== ")") this.addToOperation(e.key);
-                        console.log({first});
+                        if ( lastDigit !== ")" ) this.addToOperation(e.key);                       
   }
   this.playKeySound();
 }
@@ -295,7 +299,7 @@ hitIt(mathString) {
     return err;
   }
   const result = typeof math.eval(mathString) === 'number' ? math.eval(mathString).toString() : '';
-  console.log(`Eval: ${eval(mathString)}`); //check against library result to see if library is wasteful dependancy
+  //console.log(`Eval: ${eval(mathString)}`); //check against library result to see if library is wasteful dependancy
   // replace mathematical operators with string operators before it goes back into state
   mathString = mathString.replace(/\*/ig, "x");
   this.setState({ screenDigit: result,
