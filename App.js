@@ -145,9 +145,10 @@ playKeySound() {
 //TO DO disallow numeral after closing bracket
 handleKeyPress(e) {
   // boolean flag for which keys to listen to
-  const valid = e.key.match(/[\d+=\-*/\.)(]|Backspace|Esc(ape)*|Enter/i) || e.keyCode === 13;
+  const valid = /[\d+=\-*/\.)(]|Backspace|Esc(ape)*|Enter/i.test(e.key) || e.keyCode === 13;
+  console.log({valid});
   if (!valid) return;
-  const operator = new RegExp(/[+=\-*/\(]/i); //opening bracket included to prevent operator directly after (
+  const operator = new RegExp(/[+=\-*x/\(]/i); //opening bracket included to prevent operator directly after (
   const started = !/^0$/.test(this.state.currentOperation); //boolean to show if operation begun
   console.log({started});
   // boolean flag to check first entry is operand - used for brackets keys
@@ -175,13 +176,13 @@ handleKeyPress(e) {
                         break;
     case "*":           //key is * so needs translation
                         if (started) {
-                          if (!this.state.screenDigit.match(operator)) this.addToOperation("x");
+                          if (!operator.test(this.state.screenDigit)) this.addToOperation("x");
                           else this.replaceOperator(this.state.screenDigit, e.key);
                         }
                         break;        
     case "-":
     case "+":           
-    case "/":           if (!this.state.screenDigit.match(operator)) {
+    case "/":           if (!operator.test(this.state.screenDigit)) {
                           if (started || (!started && e.key === "-") ) this.addToOperation(e.key);
                         }
                         else {
@@ -209,7 +210,7 @@ handleKeyPress(e) {
 }
 
 handleBtnClick(buttonText) {
-  const special = buttonText.match(/[+=\-x÷)(\.]|( )|AC|C/i);
+  const special = /[+=\-x÷)(\.]|( )|AC|C/i.test(buttonText);
   const started = !/^0$/.test(this.state.currentOperation); //boolean to show if operation begun
   console.log({started});
   if (!special) {
@@ -229,12 +230,12 @@ handleBtnClick(buttonText) {
                           break;
       case "( )":         this.brackets(this.state.currentOperation);
                           break;
-      case "÷":           if (!this.state.screenDigit.match(operator)) this.addToOperation("/");
+      case "÷":           if (!operator.test(this.state.screenDigit)) this.addToOperation("/");
                           else this.replaceOperator(this.state.screenDigit, "÷");
                           break;
       case "+":            
       case "-":           
-      case "x":           if (!this.state.screenDigit.match(operator)) {
+      case "x":           if (!operator.test(this.state.screenDigit)) {
                             this.addToOperation(buttonText);
                           }
                           else {
@@ -313,5 +314,5 @@ hitIt(mathString) {
 
 export default App;
 
-//TO DO refactor all match methods to test() where possible
-//TO DO refactor button generation to use array instead of object
+//TO DO fix bug that runs replaceoperator func when neg number as screendigit 
+// - prob need to replace references to screendigit with a lookup of last character in operation

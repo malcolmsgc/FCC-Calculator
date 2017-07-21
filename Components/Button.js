@@ -6,7 +6,7 @@ class Button extends React.Component {
 
     
     render() {
-        let { buttonText, buttonValue, handleBtnClick } = this.props;
+        let { buttonText, handleBtnClick } = this.props;
          return (
                 <button className="button" 
                 data-btn={buttonText} 
