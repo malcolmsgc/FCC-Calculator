@@ -49,14 +49,17 @@ allClear() {
     });
 }
 
+// TO refactor callback to strip 0 before integer i.e. no 5x02, only 5x2
 addToOperation(btnValue) {
   btnValue = btnValue.toLowerCase();
   // strip 0 before integer i.e. no 5x02, only 5x2.
   // handled here and not prevent in input functions 
   // as 04 may seem valid to user, however it kills math.eval methos used for final calc
-  if (this.state.currentOperation.length > 1) {
-    let 
-  }
+  
+  // if (this.state.currentOperation.length > 1) {
+  //   let 
+  // }
+  
   //setState with callback
   this.setState((prevState) => {
     return { currentOperation: (prevState.currentOperation === "0")  ? 
